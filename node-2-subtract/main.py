@@ -1,16 +1,15 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from jsonrpcserver import method, dispatch, Success
+from jsonrpcserver import Success, dispatch, method
 
-
-HOST = "127.0.0.1"
+HOST = "0.0.0.0"
 PORT = 5002
 
 
 @method
-def add(a, b):
-    print(f"[ADD] {a} + {b}")
-    return Success(a + b)
+def subtract(a, b):
+    print(f"[SUBTRACT] {a} - {b}")
+    return Success(a - b)
 
 
 class RPCHandler(BaseHTTPRequestHandler):
@@ -33,6 +32,6 @@ class RPCHandler(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     server = HTTPServer((HOST, PORT), RPCHandler)
 
-    print(f"RPC Server running on http://{HOST}:{PORT}")
+    print(f"Node 2 - SUBTRACT server running on port {PORT}")
 
     server.serve_forever()
