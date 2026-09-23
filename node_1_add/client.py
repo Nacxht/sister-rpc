@@ -1,6 +1,11 @@
 import os
+import sys
+from pathlib import Path
 
 from dotenv import load_dotenv
+
+# Add parent directory to path to import common module
+sys.path.append(str(Path(__file__).parent.parent))
 
 from common.rpc_client import call_rpc
 

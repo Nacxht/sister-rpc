@@ -1,30 +1,28 @@
 import os
+import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
 
 from dotenv import load_dotenv
 from jsonrpcserver import Success, dispatch, method
 
-from common.rpc_client import call_rpc
+# Add parent directory to path to import common module
+sys.path.append(str(Path(__file__).parent.parent))
 
 load_dotenv()
 
-HOST = os.getenv("NODE_2_HOST", "0.0.0.0")
-PORT = int(os.getenv("NODE_2_PORT", "5002"))
+HOST = os.getenv("NODE_4_HOST", "0.0.0.0")
+PORT = int(os.getenv("NODE_4_PORT", "5004"))
 
 
 @method
-def subtract(a, b):
-    print(f"[SUBTRACT] {a} - {b}")
+def divide(a, b):
+    print(f"[DIVIDE] {a} / {b}")
 
-    result = a - b
+    if b == 0:
+        raise ValueError("Cannot divide by zero")
 
-    next_result = call_rpc(
-        os.getenv("NODE_4_URL", "http://192.168.161.238:5004"),
-        "divide",
-        [result, 9],
-    )
-
-    return Success(next_result)
+    return Success(a / b)
 
 
 class RPCHandler(BaseHTTPRequestHandler):
@@ -47,6 +45,6 @@ class RPCHandler(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     server = HTTPServer((HOST, PORT), RPCHandler)
 
-    print(f"Node 2 - SUBTRACT server running on port {PORT}")
+    print(f"Node 4 - DIVIDE server running on port {PORT}")
 
     server.serve_forever()

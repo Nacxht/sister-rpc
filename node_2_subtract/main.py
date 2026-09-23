@@ -1,27 +1,32 @@
 import os
+import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
 
 from dotenv import load_dotenv
 from jsonrpcserver import Success, dispatch, method
+
+# Add parent directory to path to import common module
+sys.path.append(str(Path(__file__).parent.parent))
 
 from common.rpc_client import call_rpc
 
 load_dotenv()
 
-HOST = os.getenv("NODE_1_HOST", "0.0.0.0")
-PORT = int(os.getenv("NODE_1_PORT", "5001"))
+HOST = os.getenv("NODE_2_HOST", "0.0.0.0")
+PORT = int(os.getenv("NODE_2_PORT", "5002"))
 
 
 @method
-def add(a, b):
-    print(f"[ADD] {a} + {b}")
+def subtract(a, b):
+    print(f"[SUBTRACT] {a} - {b}")
 
-    result = a + b
+    result = a - b
 
     next_result = call_rpc(
-        os.getenv("NODE_3_URL", "http://192.168.161.16:5003"),
-        "multiply",
-        [result, 2],
+        os.getenv("NODE_4_URL", "http://192.168.161.238:5004"),
+        "divide",
+        [result, 9],
     )
 
     return Success(next_result)
@@ -47,6 +52,6 @@ class RPCHandler(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     server = HTTPServer((HOST, PORT), RPCHandler)
 
-    print(f"Node 1 - ADD server running on port {PORT}")
+    print(f"Node 2 - SUBTRACT server running on port {PORT}")
 
     server.serve_forever()
