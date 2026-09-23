@@ -2,6 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from jsonrpcserver import Success, dispatch, method
 
+from common.rpc_client import call_rpc
+
 HOST = "0.0.0.0"
 PORT = 5002
 
@@ -9,7 +11,16 @@ PORT = 5002
 @method
 def subtract(a, b):
     print(f"[SUBTRACT] {a} - {b}")
-    return Success(a - b)
+
+    result = a - b
+
+    next_result = call_rpc(
+        "http://<IP-NODE-4>:5004",
+        "divide",
+        [result, 9],
+    )
+
+    return Success(next_result)
 
 
 class RPCHandler(BaseHTTPRequestHandler):

@@ -2,6 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from jsonrpcserver import Success, dispatch, method
 
+from common.rpc_client import call_rpc
+
 HOST = "0.0.0.0"
 PORT = 5003
 
@@ -9,7 +11,16 @@ PORT = 5003
 @method
 def multiply(a, b):
     print(f"[MULTIPLY] {a} * {b}")
-    return Success(a * b)
+
+    result = a * b
+
+    next_result = call_rpc(
+        "http://<IP-NODE-2>:5002",
+        "subtract",
+        [result, 3],
+    )
+
+    return Success(next_result)
 
 
 class RPCHandler(BaseHTTPRequestHandler):

@@ -2,6 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from jsonrpcserver import Success, dispatch, method
 
+from common.rpc_client import call_rpc
+
 HOST = "0.0.0.0"
 PORT = 5001
 
@@ -9,7 +11,16 @@ PORT = 5001
 @method
 def add(a, b):
     print(f"[ADD] {a} + {b}")
-    return Success(a + b)
+
+    result = a + b
+
+    next_result = call_rpc(
+        "http://192.168.161.16:5003",
+        "multiply",
+        [result, 2],
+    )
+
+    return Success(next_result)
 
 
 class RPCHandler(BaseHTTPRequestHandler):
