@@ -1,17 +1,30 @@
-import urllib.request
+import json
+from urllib.request import Request, urlopen
 
 from jsonrpcclient import request
 
 SERVER_URL = "http://127.0.0.1:5002"
 
 
-req = request("add", 10, 5)
+rpc_request = request(
+    "add",
+    params=[10, 5],
+)
 
-with urllib.request.urlopen(
+request_body = json.dumps(rpc_request).encode("utf-8")
+
+http_request = Request(
     SERVER_URL,
-    data=req.encode(),
-    headers={"Content-Type": "application/json"},
-) as response:
-    result = response.read().decode()
+    data=request_body,
+    headers={
+        "Content-Type": "application/json",
+    },
+    method="POST",
+)
+
+
+with urlopen(http_request) as response:
+    result = response.read().decode("utf-8")
+
 
 print("Response:", result)
