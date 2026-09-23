@@ -1,4 +1,9 @@
+import os
+
+from dotenv import load_dotenv
 from jsonrpcserver import Success, method
+
+load_dotenv()
 
 
 @method

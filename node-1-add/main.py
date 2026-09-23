@@ -1,11 +1,15 @@
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+from dotenv import load_dotenv
 from jsonrpcserver import Success, dispatch, method
 
 from common.rpc_client import call_rpc
 
-HOST = "0.0.0.0"
-PORT = 5001
+load_dotenv()
+
+HOST = os.getenv("NODE_1_HOST", "0.0.0.0")
+PORT = int(os.getenv("NODE_1_PORT", "5001"))
 
 
 @method
@@ -15,7 +19,7 @@ def add(a, b):
     result = a + b
 
     next_result = call_rpc(
-        "http://192.168.161.16:5003",
+        os.getenv("NODE_3_URL", "http://192.168.161.16:5003"),
         "multiply",
         [result, 2],
     )

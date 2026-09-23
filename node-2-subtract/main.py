@@ -1,11 +1,15 @@
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+from dotenv import load_dotenv
 from jsonrpcserver import Success, dispatch, method
 
 from common.rpc_client import call_rpc
 
-HOST = "0.0.0.0"
-PORT = 5002
+load_dotenv()
+
+HOST = os.getenv("NODE_2_HOST", "0.0.0.0")
+PORT = int(os.getenv("NODE_2_PORT", "5002"))
 
 
 @method
@@ -15,7 +19,7 @@ def subtract(a, b):
     result = a - b
 
     next_result = call_rpc(
-        "http://<IP-NODE-4>:5004",
+        os.getenv("NODE_4_URL", "http://192.168.161.238:5004"),
         "divide",
         [result, 9],
     )

@@ -1,2 +1,3 @@
 jsonrpcserver
 jsonrpcclient
+python-dotenv

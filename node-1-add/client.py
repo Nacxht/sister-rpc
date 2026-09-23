@@ -1,6 +1,12 @@
+import os
+
+from dotenv import load_dotenv
+
 from common.rpc_client import call_rpc
 
-NODE_1_URL = "http://192.168.161.137:5001"
+load_dotenv()
+
+NODE_1_URL = os.getenv("NODE_1_URL", "http://192.168.161.137:5001")
 
 
 if __name__ == "__main__":

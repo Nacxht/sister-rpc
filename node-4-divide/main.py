@@ -1,9 +1,13 @@
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+from dotenv import load_dotenv
 from jsonrpcserver import Success, dispatch, method
 
-HOST = "0.0.0.0"
-PORT = 5004
+load_dotenv()
+
+HOST = os.getenv("NODE_4_HOST", "0.0.0.0")
+PORT = int(os.getenv("NODE_4_PORT", "5004"))
 
 
 @method
